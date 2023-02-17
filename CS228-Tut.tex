@@ -1,0 +1,72 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{a4wide}
+\usepackage{dsfont}
+\usepackage{upgreek}
+\usepackage{setspace} \doublespacing
+\usepackage{mathtools}
+\usepackage{titlesec}
+\usepackage[]{biblatex}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage[]{amsmath,amssymb,amsfonts, amsthm}
+\usepackage{geometry}
+\usepackage{breqn}
+\usepackage{multicol}
+\usepackage{tikz}
+\usepackage{mathdots}
+\usepackage{color}
+\usetikzlibrary{fadings}
+\usetikzlibrary{patterns}
+\usetikzlibrary{shadows.blur}
+\usetikzlibrary{shapes}
+\title{Tutorial-7}
+\author{Om Swostik}
+\date{}
+\begin{document}
+\maketitle
+\begin{flushleft}
+\textbf{15.9(ii)}: \\
+Asssume for contradiction there exists a FO sentence $F$ without $=$ such that F doesn't satisfy any model with $> 2$ elements.\\
+Let $m$ be a model over $\{a,b\}$ such that $m \models F$. (with any signature)\\
+Construct a model $m^{'}$ (over the same signature) such that $D_{m^{'}}=\{a,b,c\}$ and $m^{'}(x)=m(x)$ ($\forall x\in FVars$)\\
+And $m^{'}(c)=a$, $m^{'}$ is identity over $\{a,b\}$.\\
+If $f\in R$, $f_{m^{'}}(l_1,\dots,l_n)$ is true if $f_m(m^{'}(l_1),\dots,m^{'}(l_n))$ holds. ($l_i \in \{a,b,c\}$)\\
+For $g\in F$, $g_{m^{'}}(l_1,\dots,l_n)= g_m(m^{'}(l_1),\dots,m^{'}(l_n))$ ($l_i \in \{a,b,c\}$) \\
+(Basically replace all occurences of c with a)\\
+Observe that, since we don't have $=$, $m^{'}\models F$.\\
+Contradiction. (since $|D_{m^{'}}|=3$)\\
+\textbf{16.6}: \\
+This is a tricky problem. It is quite tempting to try $\forall$-elim $n$ times and substitute the appropriate terms (wrt $\sigma$)\\
+However, this approach fails as the following example shows:\\       
+Consider the formula $\forall x_1\text{,}x_2\text{,}x_3\:\: x_1=x_3$ and let $\sigma= [x_1\rightarrow x_2,x_2\rightarrow x_1]$\\
+If we try to apply $\forall$-elim starting from $x_1$ and substituting each term (according to $\sigma$), we get the formula $x_1=x_3$.\\
+However, $F\sigma= \:(x_2=x_3)$  (As $x_2$ doesn't occur in $F$)\\
+A possible solution to this issue is the following: \\
+We use extra variables $y_1,y_2\dots y_n$  ($y_i$ are fresh variables not in $F$ and distinct from $x_i$)\\
+If $\sigma$ maps $x_i$ to $t_i$, we replace all occurences of $x_i$ in $t_i$ with $y_i$ to create a new term $t_i^{'}$\\
+We apply $\forall$-elim on the $x_i$'s and replace with the corresponding terms $t_i^{'}$\\
+We obtain a formula $F^{'}$ which has some $y_i$'s occuring in it (we want to replace these $y_i$'s with $x_i$'s to obtain $F\sigma$)\\
+Now apply $\forall$-intro for $y_i$'s in order, starting from $y_1$ (Why can we do this?)\\
+Now, apply $\forall$-elim again (on the the universally quantified $y_i$'s) and replace each term with the corresponding $x_i$ to get $F\sigma$ (Check that $\forall$-elim can be applied in this context)\\
+With this, we get a proof of atmost $2n$ steps\\
+\textbf{16.8}: \\
+We will simulate $\forall$-elim using $\exists$-def and other proof rules\\
+$t$ refers to any arbitrary term \\
+\begin{enumerate}
+    \item $\Sigma \vdash \forall x F(x)$ \hspace{2mm} (Premise)
+    \item $\Sigma \vdash \neg \exists x (\neg F(x))$ \hspace{2mm} ($\exists$-def-1)
+    \item $\Sigma \cup \{{\neg F(t)}\} \vdash \neg F(t)$ \hspace{2mm} (Associativity)
+    \item $\Sigma \cup \{{\neg F(t)}\} \vdash \exists x (\neg F(x))$ \hspace{2mm} ($\exists$-intro-3)
+    \item $\Sigma \cup \{{\neg F(t)}\} \vdash \neg \exists x(\neg F(x))$ \hspace{2mm} (Monotonicity-2)
+    \item $\Sigma \vdash \neg \neg F(t)$  \hspace{2mm} (By-Contra-4-5)
+    \item  $\Sigma \vdash F(t)$  \hspace{2mm} (Double-neg-elim-6)
+\end{enumerate}
+\textbf{17.4.1}: \\
+\begin{enumerate}
+    \item $ \phi \vdash R(s_1,s_2) \vee \neg R(s_1,s_2)$ \hspace{2mm} (Tautology)
+    \item $\phi \vdash \exists w (R(s_1,s_2)\vee \neg R(w,s_2))$ \hspace{2mm} ($\exists$-intro-1)
+    \item $\phi \vdash \forall z \exists w (R(s_1,s_2)\vee \neg R(w,z))$ \hspace{2mm} ($\forall$-intro-2)
+\end{enumerate}
+\end{flushleft}
+\end{document}

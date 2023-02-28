@@ -1,0 +1,174 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{a4wide}
+\usepackage{dsfont}
+\usepackage{upgreek}
+\usepackage{setspace} \doublespacing
+\usepackage{mathtools}
+\usepackage{titlesec}
+\usepackage[]{biblatex}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage[]{amsmath,amssymb,amsfonts, amsthm}
+\usepackage{geometry}
+\usepackage{breqn}
+\usepackage{multicol}
+\usepackage{tikz}
+\usepackage{mathdots}
+\usepackage{color}
+\usetikzlibrary{fadings}
+\usetikzlibrary{patterns}
+\usetikzlibrary{shadows.blur}
+\usetikzlibrary{shapes}
+\title{\textbf{Tutorial solutions}}
+\author{Om Swostik}
+\date{}
+\begin{document}
+\maketitle
+\begin{flushleft}
+\section{Tutorial-7}
+\textbf{15.9(ii)}: \\
+Asssume for contradiction there exists a FO sentence $F$ without $=$ such that F doesn't satisfy any model with $> 2$ elements.\\
+Let $m$ be a model over $\{a,b\}$ such that $m \models F$. (with any signature)\\
+Construct a model $m^{'}$ (over the same signature) such that $D_{m^{'}}=\{a,b,c\}$ and $m^{'}(x)=m(x)$ ($\forall x\in FVars$)\\
+And $m^{'}(c)=a$, $m^{'}$ is identity over $\{a,b\}$.\\
+If $f\in R$, $f_{m^{'}}(l_1,\dots,l_n)$ is true if $f_m(m^{'}(l_1),\dots,m^{'}(l_n))$ holds. ($l_i \in \{a,b,c\}$)\\
+For $g\in F$, $g_{m^{'}}(l_1,\dots,l_n)= g_m(m^{'}(l_1),\dots,m^{'}(l_n))$ ($l_i \in \{a,b,c\}$) \\
+(Basically replace all occurences of c with a)\\
+Observe that, since we don't have $=$, $m^{'}\models F$.\\
+Contradiction. (since $|D_{m^{'}}|=3$)\\
+\textbf{16.6}: \\
+This is a tricky problem. It is quite tempting to try $\forall$-elim $n$ times and substitute the appropriate terms (wrt $\sigma$)\\
+However, this approach fails as the following example shows:\\       
+Consider the formula $\forall x_1\text{,}x_2\text{,}x_3\:\: x_1=x_3$ and let $\sigma= [x_1\rightarrow x_2,x_2\rightarrow x_1]$\\
+If we try to apply $\forall$-elim starting from $x_1$ and substituting each term (according to $\sigma$), we get the formula $x_1=x_3$.\\
+However, $F\sigma= \:(x_2=x_3)$  (As $x_2$ doesn't occur in $F$)\\
+A possible solution to this issue is the following: \\
+We use extra variables $y_1,y_2\dots y_n$  ($y_i$ are fresh variables not in $F$ and distinct from $x_i$)\\
+If $\sigma$ maps $x_i$ to $t_i$, we replace all occurences of $x_i$ in $t_i$ with $y_i$ to create a new term $t_i^{'}$\\
+We apply $\forall$-elim on the $x_i$'s and replace with the corresponding terms $t_i^{'}$\\
+We obtain a formula $F^{'}$ which has some $y_i$'s occuring in it (we want to replace these $y_i$'s with $x_i$'s to obtain $F\sigma$)\\
+Now apply $\forall$-intro for $y_i$'s in order, starting from $y_1$ (Why can we do this?)\\
+Now, apply $\forall$-elim again (on the the universally quantified $y_i$'s) and replace each term with the corresponding $x_i$ to get $F\sigma$ (Check that $\forall$-elim can be applied in this context)\\
+With this, we get a proof of atmost $2n$ steps\\
+\textbf{16.8}: \\
+We will simulate $\forall$-elim using $\exists$-def and other proof rules\\
+$t$ refers to any arbitrary term \\
+\begin{enumerate}
+    \item $\Sigma \vdash \forall x F(x)$ \hspace{2mm} (Premise)
+    \item $\Sigma \vdash \neg \exists x (\neg F(x))$ \hspace{2mm} ($\exists$-def-1)
+    \item $\Sigma \cup \{{\neg F(t)}\} \vdash \neg F(t)$ \hspace{2mm} (Associativity)
+    \item $\Sigma \cup \{{\neg F(t)}\} \vdash \exists x (\neg F(x))$ \hspace{2mm} ($\exists$-intro-3)
+    \item $\Sigma \cup \{{\neg F(t)}\} \vdash \neg \exists x(\neg F(x))$ \hspace{2mm} (Monotonicity-2)
+    \item $\Sigma \vdash \neg \neg F(t)$  \hspace{2mm} (By-Contra-4-5)
+    \item  $\Sigma \vdash F(t)$  \hspace{2mm} (Double-neg-elim-6)
+\end{enumerate}
+\textbf{18.10}: \\
+We are trying to prenex a formula $F$ such that the sum of function parameters after skolemization is minimum.\\
+First, we remove all occurences of $\implies$ from $F$. This can be done in linear time.\\
+We end up a with a formula $F^{'}$ which has only $\vee$ and $\wedge$ as its binary connectives.\\
+Now, the main idea is to divide $F^{'}$ into 'chunks' i.e divide $F^{'}$ into separetely quantified blocks,\\
+where we call each block a 'chunk'\\
+For example, if $F^{'}= (\forall x,y\exists w(R(x,y,z)))\vee (\exists a,b\forall c(E(a,b,c)))$, then $F^{'}$ has two chunks.\\
+These are $\forall x,y\exists w(R(x,y,z))$ and $\exists a,b\forall c(E(a,b,c))$.\\
+We associate a sequence to each chunk in $F^{'}$. This is done by breaking each chunk into 'pieces'.\\
+For each chunk, go through its quantifiers such that whenever a $\exists$ is encountered (or the end is reached), break that part and call it a 'piece'\\
+In the example above, in the first chunk of $F^{'}$ we have only one piece i.e $\forall x,y\exists w$\\
+while in the second chunk, we have three pieces $\exists a$, $\exists b$ and $\forall c$.\\
+Note that if there are no $\exists$ occuring in the chunk, then the $\forall$s form one single piece.\\
+For each piece in a given chunk, the value of that piece is the number of $\forall$'s occuring in it\\
+The set of values of the pieces naturally generate a sequence for each chunk of the formula\\
+In the example, the sequences are $2$ and $0 \:0\:1$.\\
+The algorithm goes as follows: \\
+\begin{enumerate}
+\item Store the sequences in separate linked lists with the pointer to the head of each list stored in another list (call it $L$, $L$ is doubly linked to make deletions easier).\\
+\item Compare the values at the head of each linked list (while going through $L$) and prenex the chunk with the minimum value and move the head of that list (with the minimum) to the list$\rightarrow$ next (if list $\rightarrow$ next $\neq$ NULL).\\
+      If list $\rightarrow$ next $=$ NULL, delete the pointer to the head of that list from $L$
+\item Stop iterating when $L$ is empty
+\end{enumerate}
+We obtain a prenexed formula $G$ which we can guarantee will produce minimal number of parameters after skolemization.\\
+\clearpage
+\begin{center} \textbf{\Large Part-II}\end{center}
+\section{Tutorial-1}
+\textbf{1}:\\
+Given $\phi= \forall x\exists y \:R(x,y)\: \wedge\: \exists y \forall x\:\neg R(x,y)$.\\
+Take the model to be the set of naturals $\mathbb{N}$ with $<$ relation.\\
+Then, $m\models \phi$ (Why?)\\
+(\textbf{Hint}: $\mathbb{N}$ is an well-ordered set (i.e has a minimum) and isn't bounded above)\\
+\textbf{2}:\\
+$\varphi_B(x,y)=\exists z(P(z,x)\wedge P(z,y))\wedge \neg F(x)$\\
+$\varphi_A(x,y)=\exists z(P(z,y)\wedge \varphi_S(x,z))$   \hspace{4.5mm} ($\varphi_S(x,y)=\exists z(P(z,x)\wedge P(z,y))\wedge F(x)$, $x$ is sister of $y$)\\
+$\varphi_C(x,y)=\exists z(\varphi_A(z,x)\wedge P(z,y))$\\
+$\varphi_O(x)=\forall z,y (P(z,y)\wedge P(z,x)\Rightarrow (x=y))$\\
+The spousal relationship cannot be defined (Why?)\\
+\textbf{3}:\\
+$Zero(x)=\:+(x,x)=x$\\
+$One(x)= \forall y(\times(x,y)=y)$\\
+$Two(x)= \exists z,w((+(z,w)=x)\wedge (One(z)\wedge One(w)))$\\
+$Even(x)= \exists z,y((\times(z,y)=x)\wedge Two(y))$ \\
+$Odd(x)=\neg Even(x)$\\
+$Prime(x)=\neg \exists w,y((\times(w,y)=x)\wedge(\neg One(w)\wedge \neg One(y)))$\\
+Goldbach conjecture in FO: $\forall x(\neg One(x)\wedge \neg Two(x)\wedge Even(x)\Rightarrow \exists z,w(Prime(z)\wedge Prime(w)\wedge +(z,w)=x))$\\
+\textbf{4}:\\
+Encoding associativity of $+$:  $\forall x,y,z(+(x,+(y,z))=+(+(x,y),z))$\\
+Encoding the right identity as $0$:  $\forall x(+(x,0)=x)$\\
+Encoding right inverse: $\forall x\exists y(+(x,y)=0)$\\
+Encoding A(4): $\forall x,y,z(+(x,z)=+(y,z)\Rightarrow x=y)$\\
+Here we have used the signature $\tau=(0,+)$.\\
+\textbf{5}:\\
+\textbf{(i)} Consider the set of integers $\mathbb{Z}$ with the induced relation $+_Z$ referring to the usual addition in $\mathbb{Z}$. The constant $0_Z$ refers to $0$ in $\mathbb{Z}$. Observe that addition is associative and admits both left and right inverses. Also $0$ is a identity for addition.
+We can conclude the $\tau$-structure $\mathbb{Z}$ satisfies $\psi$.\\
+\textbf{(ii)} Consider the set $\mathbb{N}_0$ of whole numbers and the corresponding induced relation being addition and the constant being $0$ (in $\mathbb{N}_0$). This $\tau$-structure doesn't satisfy $\psi$ as $\varphi_3$ fails to be true (non-zero elements in $\mathbb{N}_0$ don't have inverses).\\
+\textbf{(iii)} Consider the set of all $n\times n$ invertible matrices with complex values, $GL_n(\mathbb{C})$. Let the induced binary operation be matrix multiplication and let the constant $0$ map to the identity $n\times n$ matrix.\\
+It's clear that the $\tau$-structure $GL_n(\mathbb{C})$ satisfies $\psi$, however, it doesn't satisfy $\forall x,y(+(x,y)=+(y,x))$ (Why?).\\
+\textbf{(iv)} As before, consider the set $\mathbb{N}_0$ of whole numbers with the usual addition. This satisfies $\varphi_1\wedge\varphi_2$ but doesn't satisfy $\varphi_3$.\\
+Consider the set of non-negative reals $\mathbb{R}_{\geq0}$, with the binary operation defined as $+(a,b)=|a-b|$ and the constant mapping to $0$. Show that this structure satisfies $\varphi_2\wedge \varphi_3$ but fails to satisfy $\varphi_1$.\\
+Consider $\mathbb{Z}$ with the usual addition and the constant $0$ mapping to $1$ (in $\mathbb{Z}$). This satisfies $\varphi_1\wedge\varphi_3$ but fails to satisfy $\varphi_2$.\\
+We can conclude that $\psi$ isn't equivalent to any of $\varphi_1\wedge\varphi_2$, $\varphi_2\wedge\varphi_3$ or $\varphi_1\wedge\varphi_3$.
+\clearpage
+\textbf{7}:
+\tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
+
+\begin{tikzpicture}[x=0.75pt,y=0.75pt,yscale=-1,xscale=1]
+%uncomment if require: \path (0,300); %set diagram left start at 0, and has height of 300
+
+%Shape: Circle [id:dp8408479190255029] 
+\draw   (100,138) .. controls (100,124.19) and (111.19,113) .. (125,113) .. controls (138.81,113) and (150,124.19) .. (150,138) .. controls (150,151.81) and (138.81,163) .. (125,163) .. controls (111.19,163) and (100,151.81) .. (100,138) -- cycle ;
+%Shape: Circle [id:dp750067727127359] 
+\draw   (290,59) .. controls (290,45.19) and (301.19,34) .. (315,34) .. controls (328.81,34) and (340,45.19) .. (340,59) .. controls (340,72.81) and (328.81,84) .. (315,84) .. controls (301.19,84) and (290,72.81) .. (290,59) -- cycle ;
+%Shape: Circle [id:dp24092758810894677] 
+\draw   (292.33,227.17) .. controls (292.33,213.45) and (303.45,202.33) .. (317.17,202.33) .. controls (330.88,202.33) and (342,213.45) .. (342,227.17) .. controls (342,240.88) and (330.88,252) .. (317.17,252) .. controls (303.45,252) and (292.33,240.88) .. (292.33,227.17) -- cycle ;
+%Straight Lines [id:da33436515075759754] 
+\draw    (148.33,147) -- (294.33,217) ;
+%Straight Lines [id:da7853123539498421] 
+\draw    (149.33,129) -- (290,59) ;
+%Curve Lines [id:da3136767910039169] 
+\draw    (105.33,155) .. controls (66.72,165.89) and (46.74,128.76) .. (96.79,127.04) ;
+\draw [shift={(98.33,127)}, rotate = 178.9] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Curve Lines [id:da9992778727066822] 
+\draw    (337.33,75) .. controls (407.27,76.97) and (383.09,42.07) .. (343.17,49.63) ;
+\draw [shift={(341.33,50)}, rotate = 347.62] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Curve Lines [id:da29560771091212934] 
+\draw    (340,212) .. controls (378.14,195.08) and (423.87,249.45) .. (335.67,243.1) ;
+\draw [shift={(334.33,243)}, rotate = 4.45] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+
+% Text Node
+\draw (120,132) node [anchor=north west][inner sep=0.75pt]   [align=left] {A};
+% Text Node
+\draw (311,52) node [anchor=north west][inner sep=0.75pt]   [align=left] {B};
+% Text Node
+\draw (311,220) node [anchor=north west][inner sep=0.75pt]   [align=left] {C};
+
+
+\end{tikzpicture}\\
+\vspace{2mm}
+Consider the undirected graph $\mathcal{G}$ above (with loops). This (with its natural edge relation) satisfies the second formula but not the first.\\
+\textbf{8}: \\$\exists^{\geq n}x(x=x)\:\wedge\:\neg\exists ^{\geq n+1}x(x=x)$ is true for all models whose universe has exactly $n$ elements.\\
+Let $\varphi= \exists x_1, x_2\dots x_n(\wedge^{}_{i\neq j}(x_i\neq x_j))$.\\
+$\varphi \equiv \exists^{\geq n}x(x=x)$ (Why?)\\
+\textbf{9}:\\
+Using counting quantifiers, we can write,\\
+$\varphi= \exists^{\geq n}x(x=x)\:\wedge\:\neg\exists ^{\geq m+1}x(x=x)$\\
+$\varphi$ evaluates to true only over models with atleast $n$ and atmost $m$ elements.
+\end{flushleft}
+\end{document}

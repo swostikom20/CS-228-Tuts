@@ -1,0 +1,16 @@
+\chapter*{Tutorial-2}
+\addcontentsline{toc}{chapter}{Tutorial-2}
+\textbf{1}(a) Any word $w$ over $\{a,b\}$ having equal number of occurences of $ab$ and $ba$ must start and end with the same character. (Why?)\\
+$Q_a(first)=\exists x(Q_a(x)\wedge \forall y(x\leq y))$ (a is the first character in $w$)\\
+$Q_a(last)=\exists x(Q_a(x)\wedge \forall y(y\leq x))$ (a is the last character in $w$)\\
+Now, let $\varphi=(Q_a(first)\wedge Q_a(last))\vee (Q_b(first)\wedge Q_b(last))$\\
+$\varphi$ is only satisfied by words which have equal number of $ab$ and $ba$.\\
+(b) $\exists x(Q_{\#}(x)\wedge \forall y(x<y\Rightarrow Q_b(y))\wedge \forall z(z<x \Rightarrow Q_a(z)))$\\
+(c) $\forall x,y(S(x,y)\wedge Q_b(x)\Rightarrow Q_b(y))$ (Note that word with all $a$'s and empty word also need to satisfy)\\
+(d) $Q_0(second)=\exists x(\forall y(x\leq y)\wedge \forall y(S(x,y)\Rightarrow Q_0(y)))$\\
+$Q_0(second-last)= \exists x(\forall y(y\leq x)\wedge \forall z(S(z,x)\Rightarrow Q_0(z)))$\\
+Now, let $\varphi=Q_0(second)\wedge Q_0(second-last)$ \\
+(e) $\Sigma=\{\begin{pmatrix} 1\\0\end{pmatrix},\begin{pmatrix} 0\\1\end{pmatrix},\begin{pmatrix} 1\\1\end{pmatrix},\begin{pmatrix} 0\\0\end{pmatrix}\}$\\
+Now, for the top row to be bigger than bottom row, there must exist a $\begin{pmatrix} 1\\0\end{pmatrix}$ somewhere and everything before this must only consist of $\begin{pmatrix}1\\1\end{pmatrix}\:\text{and}\:\begin{pmatrix}0\\0\end{pmatrix}.$\\
+$\exists x(Q_{\{1\:0\}}(x)\wedge \forall y(y<x \Rightarrow Q_{\{0\:0\}}(y)\vee Q_{\{1\:1\}}(y)))$\\
+\textbf{2} FO $\subseteq$ Regular languages

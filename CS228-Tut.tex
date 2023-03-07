@@ -20,8 +20,9 @@
 \usetikzlibrary{patterns}
 \usetikzlibrary{shadows.blur}
 \usetikzlibrary{shapes}
+\usetikzlibrary{automata, arrows.meta, positioning}
 \title{\textbf{Tutorial solutions (Part-II)}}
-\author{Om Swostik}
+\author{Om Swostik Mishra, Anish Kulkarni}
 \date{}
 \begin{document}
 \maketitle
@@ -107,5 +108,117 @@ $\varphi \equiv \exists^{\geq n}x(x=x)$ (Why?)\\
 Using counting quantifiers, we can write,\\
 $\varphi= \exists^{\geq n}x(x=x)\:\wedge\:\neg\exists ^{\geq m+1}x(x=x)$\\
 $\varphi$ evaluates to true only over models with atleast $n$ and atmost $m$ elements.
+\section{Tutorial-2}
+\textbf{1:}\\
+\textbf{(a)} Observe that this is the same as the set of the words that start and end in the same letter! (Try and see how. A hint: An ``\textit{ab}" occurrence can be seen as ``switching" from \textit{a} to \textit{b} while parsing the word from left to right. Similar for ``\textit{ba}".)
+We'll define the following functions w.r.t the word signature - they'll help us out throughout the tutorial:\newline
+$\hspace{1cm} first(x) = \forall y.(x < y \lor x = y) \hspace{4cm}
+last(x) = \forall y.(x > y \lor x = y)$ \\
+So, $\varphi_1 = \exists x.(\;\exists y.(\;first(x) \land last(y) \land \neg(Q_a(x) \land Q_b(y)) \land \neg(Q_b(x) \land Q_a(y))\;)\;)$ is s.t. $L(\varphi_1) = L$.
+
+\textbf{(b)} $\varphi_2 = \exists x.(\;Q_\#(x) \land \forall y.(\;(x < y \Rightarrow Q_b(y)) \land (y < x \Rightarrow Q_a(y))\;)\;)$ is such that $L(\varphi_2) = L$.\\
+Note - for any letter in our alphabet we have its corresponding $Q$-function - hence, $Q_\#$ in our $\varphi_2$.
+
+\textbf{(c)} Either there is no $b$ or the only $b$'s in the word come at the end.\\
+Hence, $\varphi_3 = \forall x \forall y.(\; (S(x,\, y) \land Q_b(x)) \Rightarrow Q_b(y)\;)$ is such that $L(\varphi_3) = L$.
+
+\textbf{(d)} $\varphi_4 = \exists x \exists y.(\; first(x) \land last(y) \land \forall z.(\; (S(x, z) \lor S(z, y)) \Rightarrow Q_0(z)\;)\;)$ is s.t. $L(\varphi_4) = L$.
+
+\textbf{(e)} Say we parse the word letters from left to right. In the beginning, the top and bottom entries of each letter may or may not be the same. However, if we want the top row to be larger than the bottom row, then the moment where the entries first differ will be $1 \choose 0$.\\ 
+Hence, $\varphi_5 = \exists x.(\;Q_{1 \choose 0}(x) \land \forall y.(\; y < x \Rightarrow (Q_{0 \choose 0}(y) \lor Q_{1 \choose 1}(y))\;)\;)$ is s.t. $L(\varphi_5) = L$.
+
+\textbf{2:}\\
+
+Note that for all $\varphi$, $L(\varphi)$ is by definition FO-definable, and hence regular. This is as \textit{FO-definable languages $\subseteq$ regular languages}. (How? Given an FO formula, can we find an algorithm to construct a DFA for its language?). Also, as regular languages are closed under complementation, $\overline{L(\varphi)}$ will also be regular. 
+
+\textbf{(1)} $L(\varphi) = {\epsilon}.$ The DFA is given by:\vspace{3mm}
+
+\begin{tikzpicture}
+    \node [state, initial, accepting, initial text = {}] {$q_0$};
+\end{tikzpicture} \\
+Naturally, only a structure (model) with an empty universe (domain) can satisfy $\varphi$ here.
+
+\textbf{(2)} $L(\varphi) = \Sigma^* b a^* a \Sigma^*$. The DFA is given by:\vspace{3mm}
+
+\begin{tikzpicture}
+    \node (q0) [state, initial, initial text = {}] {$q_0$};
+    \node (q1) [state, right = of q0] {$q_1$};
+    \node (q2) [state, accepting, right = of q1] {$q_2$};
+    \path [-stealth]
+        (q0) edge [loop above] node {$a$}()
+        (q0) edge node[above] {$b$} (q1)
+        (q1) edge [loop above] node {$b$}()
+        (q1) edge node[above] {$a$} (q2)
+        (q2) edge [loop above] node {$\Sigma$}();
+\end{tikzpicture}\\
+Observe that we need to encode $an$ occurrence of $b a^* a$. With the first 2 states, we are basically encoding the $first$ such occurrence.
+
+\textbf{(3)} $L(\varphi) = \Sigma^* a \Sigma$. The DFA is given by:\vspace{3mm}
+
+\begin{tikzpicture}
+    \node (q0) [state, initial, initial text = {}] {$q_0$};
+    \node (q1) [state, right = of q0] {$q_1$};
+    \node (q2) [state, accepting, right = of q1] {$q_2$};
+    \path [-stealth]
+        (q0) edge [loop above] node {$\Sigma$}()
+        (q0) edge node[above] {$a$} (q1)
+        (q1) edge node[above] {$\Sigma$} (q2);
+\end{tikzpicture}\\
+Basically, the second-last letter (has to exist and) has to be $a$.
+
+\textbf{(4)} $L(\varphi) = (ab)^*$. The DFA is given by:\vspace{3mm}
+
+\begin{tikzpicture}
+    \node (q0) [state, initial, initial text = {}] {$q_0$};
+    \node (q1) [state, right = of q0] {$q_1$};
+    \node (q2) [state, accepting, right = of q1] {$q_2$};
+    \node (q3) [state, right = of q2] {$q_3$};
+    \path [-stealth]
+    (q0) edge node[above] {$a$} (q1)
+    (q1) edge node[above] {$b$} (q2)
+    (q2) edge[bend left] node[above] {$a$} (q3)
+    (q3) edge[bend left] node[below] {$b$} (q2);
+\end{tikzpicture}\\
+We want words starting with $a$, ending with $b$, and having an alternating $a$-$b$ pattern. We don't want the empty word though; hence, we add $q_0$ and $q_1$.
+
+\textbf{3:}
+
+The automaton given is:\vspace{3mm}
+
+\begin{tikzpicture}
+    \node (1) [state, initial, initial text = {}] {1};
+    \node (2) [state, accepting, right = of 1] {2};
+    \node (3) [state, below = of 2] {3};
+    \node (4) [state, left = of 3] {4};
+    \node (5) [state, right = of 2] {5};
+    \path [-stealth]
+        (1) edge node[above] {$b$} (2)
+        (1) edge[bend left] node[above] {$a$} (5)
+        (2) edge node[above] {$b$} (5)
+        (2) edge node[right] {$a$} (3)
+        (3) edge[loop below] node[below] {$a$} ()
+        (3) edge node[below] {$b$} (4)
+        (4) edge node[left] {$b$} (1)
+        (5) edge[loop below] node[below] {$a,\, b$} ();
+\end{tikzpicture}\\
+5 is clearly a trap state. Let's ignore the paths leading to it. The first accepted word is ``b", and to get other words we need to go through the 2 $\rightarrow$ 3 $\rightarrow$ 4 $\rightarrow$ 1 $\rightarrow$ 2 cycle once ( $(abbb)^*$ ). However, we can go through the self-loop on 3 an arbitrary amount ($a^*$).
+
+So, $L = b(a a^* bbb)^*$.
+
+Define the following:
+
+$\forall x, y, z \in Vars,\;\varphi_{bbb}(x, y, z) = S(x, y) \land S(y, z) \land Q_b(x) \land Q_b(y) \land Q_b(z)$
+
+$\varphi_1 = \exists x.(first(x) \land Q_b(x))$ (since the word starts with a ``$b$").
+
+$\varphi_2 = (\exists w.(first(w) \land \neg\, last(w))) \Rightarrow \exists x \exists y \exists z.(last(z) \land \varphi_{bbb}(x,\, y,\, z))$ (since if the word size is $>$ 1, the word has to end in a ``$bbb$").
+
+$\varphi_3 = \forall x \forall y \forall z.(\;\varphi_{bbb}(x,\, y,\, z) \Rightarrow \exists w.(S(w, z) \land Q_a(w))\;)$ (Immediately before every occurrence of ``$bbb$'', there is a non-empty series of ``$a$''s).
+
+$\varphi_4 = \forall w.(\; Q_a(w) \Rightarrow \forall x.(\;(Q_b(x) \land x < w) \Rightarrow (\; first(x) \lor \exists y \exists z.(\varphi_{bbb}(x, y, z))\;) \;)\;)$ (Before every ``$a$'', every occurrence of ``$b$'' before it is either the first letter or part of a ``$bbb$").
+
+With all these, we claim our $L$ is exactly the language of $\varphi = \varphi_1 \land \varphi_2 \land \varphi_3 \land \varphi_4$ ! Try and figure out how - each $\varphi_i$ was coded such that together they provide us with all the necessary and sufficient properties to make $L$; however, saying that is rather vague.
+
+Playing around with each $\varphi_i$ might provide you with a better understanding: just for an example, try and see how $\varphi_4' = \forall w.(\; Q_a(w) \Rightarrow \exists x.(\;Q_b(x) \land x < w \land (\; first(x) \lor \exists y \exists z.(\varphi_{bbb}(x, y, z))\;) \;)\;)$ won't work, even though it seems to be arguing something similar. Or, try to see how things change if, in our sub-formulae, we want to encode that immediately $after$ (not before) every ``bbb" not at the end, there are a non-empty number of `a's (and vice versa).
 \end{flushleft}
 \end{document}

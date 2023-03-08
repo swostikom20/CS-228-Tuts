@@ -229,7 +229,7 @@ $\varphi_1 = \exists x.(first(x) \land Q_b(x))$ (since the word starts with a ``
 
 $\varphi_2 = (\exists w.(first(w) \land \neg\, last(w))) \Rightarrow \exists x \exists y \exists z.(last(z) \land \varphi_{bbb}(x,\, y,\, z))$ (since if the word size is $>$ 1, the word has to end in a ``$bbb$").
 
-$\varphi_3 = \forall x \forall y \forall z.(\;\varphi_{bbb}(x,\, y,\, z) \Rightarrow \exists w.(S(w, z) \land Q_a(w))\;)$ (Immediately before every occurrence of ``$bbb$'', there is a non-empty series of ``$a$''s).
+$\varphi_3 = \forall x \forall y \forall z.(\;\varphi_{bbb}(x,\, y,\, z) \Rightarrow \exists w.(S(w, x) \land Q_a(w))\;)$ (Immediately before every occurrence of ``$bbb$'', there is a non-empty series of ``$a$''s).
 
 $\varphi_4 = \forall w.(\; Q_a(w) \Rightarrow \forall x.(\;(Q_b(x) \land x < w) \Rightarrow (\; first(x) \lor \exists y \exists z.(\varphi_{bbb}(x, y, z))\;) \;)\;)$ (Before every ``$a$'', every occurrence of ``$b$'' before it is either the first letter or part of a ``$bbb$").
 

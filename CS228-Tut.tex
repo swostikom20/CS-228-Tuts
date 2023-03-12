@@ -114,7 +114,7 @@ $\varphi$ evaluates to true only over models with atleast $n$ and atmost $m$ ele
 We'll define the following functions w.r.t the word signature - they'll help us out throughout the tutorial:\newline
 $\hspace{1cm} first(x) = \forall y.(x < y \lor x = y) \hspace{4cm}
 last(x) = \forall y.(x > y \lor x = y)$ \\
-So, $\varphi_1 = \exists x.(\;\exists y.(\;first(x) \land last(y) \land \neg(Q_a(x) \land Q_b(y)) \land \neg(Q_b(x) \land Q_a(y))\;)\;)$ is s.t. $L(\varphi_1) = L$.
+So, $\varphi_1 = \forall x.(x \neq x) \lor \exists x.(\;\exists y.(\;first(x) \land last(y) \land \neg(Q_a(x) \land Q_b(y)) \land \neg(Q_b(x) \land Q_a(y))\;)\;)$ \\ is such that $L(\varphi_1) = L$.
 
 \textbf{(b)} $\varphi_2 = \exists x.(\;Q_\#(x) \land \forall y.(\;(x < y \Rightarrow Q_b(y)) \land (y < x \Rightarrow Q_a(y))\;)\;)$ is such that $L(\varphi_2) = L$.\\
 Note - for any letter in our alphabet we have its corresponding $Q$-function - hence, $Q_\#$ in our $\varphi_2$.
@@ -232,6 +232,7 @@ $\varphi_2 = (\exists w.(first(w) \land \neg\, last(w))) \Rightarrow \exists x \
 $\varphi_3 = \forall x \forall y \forall z.(\;\varphi_{bbb}(x,\, y,\, z) \Rightarrow \exists w.(S(w, x) \land Q_a(w))\;)$ (Immediately before every occurrence of ``$bbb$'', there is a non-empty series of ``$a$''s).
 
 $\varphi_4 = \forall w.(\; Q_a(w) \Rightarrow \forall x.(\;(Q_b(x) \land x < w) \Rightarrow (\; first(x) \lor \exists y \exists z.(\varphi_{bbb}(x, y, z) \lor \varphi_{bbb}(y, x, z) \lor \varphi_{bbb}(y, z, x)\;) \;)\;)$ (Before every ``$a$'', every occurrence of ``$b$'' before it is either the first letter or part of a ``$bbb$").
+
 With all these, we claim our $L$ is exactly the language of $\varphi = \varphi_1 \land \varphi_2 \land \varphi_3 \land \varphi_4$ ! Try and figure out how - each $\varphi_i$ was coded such that together they provide us with all the necessary and sufficient properties to make $L$; however, saying that is rather vague.
 
 Playing around with each $\varphi_i$ might provide you with a better understanding: just for an example, try and see how $\varphi_4' = \forall w.(\; Q_a(w) \Rightarrow \exists x.(\;Q_b(x) \land x < w \land (\; first(x) \lor \exists y \exists z.(\varphi_{bbb}(x, y, z) \lor \varphi_{bbb}(y, x, z) \lor \varphi_{bbb}(y, z, x))\;) \;)\;)$ won't work, even though it seems to be arguing something similar. Or, try to see how things change if, in our sub-formulae, we want to encode that immediately $after$ (not before) every ``bbb" not at the end, there are a non-empty number of `a's (and vice versa).

@@ -108,6 +108,7 @@ $\varphi \equiv \exists^{\geq n}x(x=x)$ (Why?)\\
 Using counting quantifiers, we can write,\\
 $\varphi= \exists^{\geq n}x(x=x)\:\wedge\:\neg\exists ^{\geq m+1}x(x=x)$\\
 $\varphi$ evaluates to true only over models with atleast $n$ and atmost $m$ elements.
+\newpage
 \section{Tutorial-2}
 \textbf{1:}\\
 \textbf{(a)} Observe that this is the same as the set of the words that start and end in the same letter! (Try and see how. A hint: An ``\textit{ab}" occurrence can be seen as ``switching" from \textit{a} to \textit{b} while parsing the word from left to right. Similar for ``\textit{ba}".)
@@ -236,5 +237,22 @@ $\varphi_4 = \forall w.(\; Q_a(w) \Rightarrow \forall x.(\;(Q_b(x) \land x < w) 
 With all these, we claim our $L$ is exactly the language of $\varphi = \varphi_1 \land \varphi_2 \land \varphi_3 \land \varphi_4$ ! Try and figure out how - each $\varphi_i$ was coded such that together they provide us with all the necessary and sufficient properties to make $L$; however, saying that is rather vague.
 
 Playing around with each $\varphi_i$ might provide you with a better understanding: just for an example, try and see how $\varphi_4' = \forall w.(\; Q_a(w) \Rightarrow \exists x.(\;Q_b(x) \land x < w \land (\; first(x) \lor \exists y \exists z.(\varphi_{bbb}(x, y, z) \lor \varphi_{bbb}(y, x, z) \lor \varphi_{bbb}(y, z, x))\;) \;)\;)$ won't work, even though it seems to be arguing something similar. Or, try to see how things change if, in our sub-formulae, we want to encode that immediately $after$ (not before) every ``bbb" not at the end, there are a non-empty number of `a's (and vice versa).
+\newpage
+\section{Tutorial-3}
+
+\textbf{1-4:}
+
+Refer to the solutions sent on the group, for now.
+
+\textbf{5:}
+
+Given $n$, consider the set of all words in $\{0, 1\}$ with length $n - 1$. Consider any DFA $A = (Q, \{0, 1\}, \delta, q_0, F)$ accepting $L_n$. Suppose there are distinct words $v$ and $w$ that end in the same state $q \in Q$.
+
+Let us first assume $v, w \neq \epsilon$. Suppose the leftmost position at which $v$ and $w$ differ is the $k$th position. We can assume w/o loss of generality, that $v$ has $0$ at that position, and $w$ has $1$. Let $x$ be any word of length $k$. Due to the determinism of $A$, $x$ has exactly one run in the automaton starting at $q$, which ends at $q' \in Q$, say. Then, the run of $vx$ and $wx$ in $A$ must end in $q'$.
+
+$vx$ has $n$th bit from the right = 0 $\quad \Longrightarrow \quad$ $vx \notin L_n$. Thus, $q' \notin F$. \\
+$wx$ has $n$th bit from the right = 1 $\quad \Longrightarrow \quad$ $vx \in L_n$. Thus, $q' \in F$. \\
+Contradiction!\\
+As a result, every word with length $n - 1$ has its run ending in a different state in $A$. There are $2^{n - 1}$ such words, and so at least $2^n - 1$ states in $A$.
 \end{flushleft}
 \end{document}
